@@ -13,6 +13,7 @@ DO PLIKU ZRODLOWEGO JUZ POSORTOWANE OD NAJCZESTSZYCH
 5)OBCINAMY BITY UZUPELNIAJACE
 6)WYCIAGAMY ODPOWIEDNIA ILOSC BITOW I ZAMIENAMY JE ZGODNIE ZE SLOWNIKIEM
 7)ZAPIS WARTOSCI ZAMIENIONYCH DO PLIKU DOCELOWEGO
+8)ZWRACA CZAS WYKONYWANIA DEKOMPRESJI PLIKU
 """
 
 
@@ -71,4 +72,4 @@ def decompress(to_decompress_file, decompressed_file):
     # podliczanie koncowego czasu wykonania dekompresji
     end_time_decompression = time.time()
     execution_time_decompression = end_time_decompression - start_time_decompression
-    print("Time it takes to decompress: ", execution_time_decompression)
+    return execution_time_decompression

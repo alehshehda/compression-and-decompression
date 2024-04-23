@@ -13,6 +13,7 @@ FUNKCJA DLA KOMPRESJI PLIKU
 4)TWORZENIE ZMIENNEJ DLA ZACHOWANIA WARTOSCI TYPU BOOL(1 BITOWE)
 5)PRZEKSZTALCENIE WARTOSCI BINARNYCH CHAR DO WARTOSCI BOOL
 6)ZAPIS WARTOSCI TYPU BOOL DO PLIKU DOCELOWEGO BIT PO BICE
+7)ZWRACA CZAS WYKONYWANIA KOMPRESJI PLIKU
 """
 
 
@@ -93,4 +94,4 @@ def compress(to_compress_file, compressed_file):
     # podliczanie koncowego czasu wykonania kompresji
     end_time_compression = time.time()
     execution_time_compression = end_time_compression - start_time_compression
-    print("Time it takes to compress: ", execution_time_compression)
+    return execution_time_compression
