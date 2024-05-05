@@ -42,4 +42,4 @@ Windows:
 Unix/MacOS:  
 `rm -rf venv`  
 
-in this step, 'venv' is the name of virtual environment, so type here the name you used as a second argument in `python -m venv venv` while creating venv4
+in this step, 'venv' is the name of virtual environment, so type here the name you used as a second argument in `python -m venv venv` while creating venv.
