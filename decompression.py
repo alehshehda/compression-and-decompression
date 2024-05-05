@@ -1,47 +1,55 @@
+import struct
 import time
-import math as m
+import math
+from encryption import decrypt_message
+from compression import dec_to_bin
 
 
-"""
-FUNKCJA DLA DEKOMPRESJI PLIKU
-1)WYCIAGAMY POTRZEBNE ZMIENNE Z PLIKU SKOMPRESOWANEGO(LICZBE UNIKALNYCH WARTOSCI,
-POSORTOWANE WARTOSCI I ILOSC BITOW UZUPELNIAJACYCH) ORAZ DANE DLA DEKOMPRESJI
-2)TWORZYMY SLOWNIK DLA DEKOMPRESJI PLIKU {BIN : CHAR}, WARTOSIC BIN ZAPISANE JAKO CHAR, WARTOSCI CHAR ZAPISANE
-DO PLIKU ZRODLOWEGO JUZ POSORTOWANE OD NAJCZESTSZYCH 
-3)Z KAZDEGO BAJTA WYCIAGAMY BITY I ZACHOWUJEMY W ZMIENNEJ BOOL_LIST
-4)ZAMIENIAMY WARTOSCI BINARNE NA WARTOSCI BINARNE ZACHOWANE JAKO CHAR(DLA DZIALANIA SLOWNIKA)
-5)OBCINAMY BITY UZUPELNIAJACE
-6)WYCIAGAMY ODPOWIEDNIA ILOSC BITOW I ZAMIENAMY JE ZGODNIE ZE SLOWNIKIEM
-7)ZAPIS WARTOSCI ZAMIENIONYCH DO PLIKU DOCELOWEGO
-8)ZWRACA CZAS WYKONYWANIA DEKOMPRESJI PLIKU
-"""
+def decompress(to_decompress_file, decompressed_file, private_key):
+    """
+    FUNKCJA DLA DEKOMPRESJI PLIKU
+    :param to_decompress_file: skompresowany plik zawartosc ktorego trzeba zdekompresowac
+    :param decompressed_file: plik zdekompresowany
+    :param private_key: klucz prywatny RSA za pomoca ktorego bedzie robiona deszyfracja
 
+    1)Pobieranie z pliku zrodlowego potrzebnych wartosci:
+    bity uzupelniajace, ilosc bajtow ktore zajete przez szyfrowane unikalne wartosci, szyfrowane unikalne wartosci
+    2)Deszyfrowanie unikalnych wartosci za pomoca kluczu prywatnego i algorytmu RSA
+    3)Obliczanie potrzebnych zmiennych: ilosc unikalnych wartosci, ilosc bitow potrzebnych do zapisania jednej wartosci
+    4)Tworzenie tablicy dla zachowania wartosc base2 zachowanych w postaci char
+    5)Tworzenie slownika {bin : char}, wartosci bin zapisane jako char(przy pomocy kroku 4)
+    6)Z kazdego bajta wyciagamy bity i wrzucamy do zmiennej dla zachowania wartosci jedno-bitowych
+    7)W zmiennej z kroku 5 dla zachowania wartosci jedno-bitowych, dane int przeksztalcamy do typu char
+    8)Obcinamy bity uzupelnijace
+    7)Dla zmiennej z kroku 6-7 bierzemy n('ilosc bitow potrzebnych do zapisania jednej wartosci' z kroku 3) bitow dla
+    prawidlowej dekompresji i zapisujemy do odpowiednej zmiennej
+    8)Zapis danych do pliku docelowego
+    9)Zwracanie calkowitego czasu wykonania dekompresji
+    """
 
-def decompress(to_decompress_file, decompressed_file):
     # inicjalizowane czasu dla dekompresji
     start_time_decompression = time.time()
 
-    # przeksztalcenie wartosci 10-ych do binarnych z okreslona dlugoscia
-    def dec_to_bin(decimal, length):
-        binary = bin(decimal)[2:]
-        padded_binary = binary.zfill(length)
-        return padded_binary
-
     # pobieramy liczby uniklanych wartosci, unikalnych wartosci oraz bitow uzupelniajacych
     with open(to_decompress_file, 'rb') as source:
-        unique_chars = ord(source.read(1))  # liczba unikalnych wartosci
-        bits_per_char = m.ceil(m.log(unique_chars, 2))  # ilosc bitow ktore potrzebne dla zapisu jednej wartosci
-        sorted_char_list = [chr(byte) for byte in source.read(unique_chars)]  # wartosci, juz posortowane dla slownika
-        padding_bits = ord(source.read(1))  # liczba bitow uzupelniajacych
+        padding_bits = ord(source.read(1))  # bity uzupelniajace
+        sorted_char_list_encrypted_length = struct.unpack('I', source.read(4))[0]  # ilosc bitow zajetych
+        # przez zasyfrowane dane
+        sorted_char_list_encrypted = source.read(sorted_char_list_encrypted_length)  # zasyfrowane dane
         packed_data = source.read()  # dane dla dekompresji
 
-    # tworzenie tablicy dla wartosci binarnych(zapisanych jako char)
+    # deszyfrowanie unikalnyc wartosci za pomoca kluczu prywatnego
+    sorted_char_list_decrypted = decrypt_message(sorted_char_list_encrypted, private_key)
+    unique_chars = len(sorted_char_list_decrypted)  # liczba unikalnych wartosci
+    bits_per_char = math.ceil(math.log(unique_chars, 2))  # ilosc bitow ktore potrzebne dla zapisu jednej wartosci
+
+    # tworzenie tablicy dla wartosci base2(zapisanych jako char)
     binary_list = list()
     for i in range(unique_chars):
         binary_list.append(dec_to_bin(i, bits_per_char))
 
     # tworzenie slownika {bin : char} (wartosci bin zapisane tez jako char)
-    bin_to_char_dict = dict(zip(binary_list, sorted_char_list))
+    bin_to_char_dict = dict(zip(binary_list, sorted_char_list_decrypted))
 
     # wyciagamy bajty do postaci bitow(0/1) do tablicy bool_list
     bool_list = []
@@ -61,7 +69,7 @@ def decompress(to_decompress_file, decompressed_file):
     # bierzemy odpowiedna ilosc bitow dla dekompresji
     decompressed_data = list()
     for i in range(0, len(char_bool_list), bits_per_char):
-        binary_to_decompress = ''.join(char_bool_list[i:i+bits_per_char])
+        binary_to_decompress = ''.join(char_bool_list[i:i + bits_per_char])
         decompressed_data.append(bin_to_char_dict[binary_to_decompress])
 
     # zapis do pliku zdekompresowanego

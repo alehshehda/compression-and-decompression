@@ -1,0 +1,3 @@
+PyQt5~=5.15.10
+sympy~=1.12
+pycryptodome~=3.20.0
