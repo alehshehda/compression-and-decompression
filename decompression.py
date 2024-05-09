@@ -18,13 +18,13 @@ def decompress(to_decompress_file, decompressed_file, private_key):
     3)Obliczanie potrzebnych zmiennych: ilosc unikalnych wartosci, ilosc bitow potrzebnych do zapisania jednej wartosci
     4)Tworzenie tablicy dla zachowania wartosc base2 zachowanych w postaci char
     5)Tworzenie slownika {bin : char}, wartosci bin zapisane jako char(przy pomocy kroku 4)
-    6)Z kazdego bajta wyciagamy bity i wrzucamy do zmiennej dla zachowania wartosci jedno-bitowych
-    7)W zmiennej z kroku 5 dla zachowania wartosci jedno-bitowych, dane int przeksztalcamy do typu char
-    8)Obcinamy bity uzupelnijace
-    7)Dla zmiennej z kroku 6-7 bierzemy n('ilosc bitow potrzebnych do zapisania jednej wartosci' z kroku 3) bitow dla
+    6)Z kazdego bajta wyciagamy bity i wrzucamy do zmiennej dla zachowania wartosci jedno-bitowych, odrazu
+        w postaci char
+    7)Obcinamy bity uzupelnijace
+    8)Dla zmiennej z kroku 6-7 bierzemy n('ilosc bitow potrzebnych do zapisania jednej wartosci' z kroku 3) bitow dla
     prawidlowej dekompresji i zapisujemy do odpowiednej zmiennej
-    8)Zapis danych do pliku docelowego
-    9)Zwracanie calkowitego czasu wykonania dekompresji
+    9)Zapis danych do pliku docelowego
+    10)Zwracanie calkowitego czasu wykonania dekompresji
     """
 
     # inicjalizowane czasu dla dekompresji
@@ -40,6 +40,8 @@ def decompress(to_decompress_file, decompressed_file, private_key):
 
     # deszyfrowanie unikalnyc wartosci za pomoca kluczu prywatnego
     sorted_char_list_decrypted = decrypt_message(sorted_char_list_encrypted, private_key)
+
+    # obliczanie potrzebnych zmiennych
     unique_chars = len(sorted_char_list_decrypted)  # liczba unikalnych wartosci
     bits_per_char = math.ceil(math.log(unique_chars, 2))  # ilosc bitow ktore potrzebne dla zapisu jednej wartosci
 
@@ -51,14 +53,11 @@ def decompress(to_decompress_file, decompressed_file, private_key):
     # tworzenie slownika {bin : char} (wartosci bin zapisane tez jako char)
     bin_to_char_dict = dict(zip(binary_list, sorted_char_list_decrypted))
 
-    # wyciagamy bajty do postaci bitow(0/1) do tablicy bool_list
-    bool_list = []
+    # wyciagamy bajty do postaci bitow(0/1) i zapisujemy do tablicy bool_list w postaci charow
+    char_bool_list = []
     for byte in packed_data:
         for i in range(7, -1, -1):
-            bool_list.append((byte >> i) & 1)
-
-    # z wartosci int robimy wartosci char dla prawidlowego dzialania slownika
-    char_bool_list = ['0' if x == 0 else '1' for x in bool_list]
+            char_bool_list.append(str((byte >> i) & 1))
 
     # obcinamy niepotrzebne bity
     if padding_bits != 0:
