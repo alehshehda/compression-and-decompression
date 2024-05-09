@@ -36,7 +36,7 @@ def generate_rsa_key_pair(key_size=2048, password="private_key", public_key_file
     phi_n = (p - 1) * (q - 1)
 
     # wybieramy liczbe e
-    e = random.randrange(3, phi_n)  # Commonly used value
+    e = random.randrange(3, phi_n)
     while True:
         if math.gcd(e, phi_n) == 1:
             break
