@@ -6,9 +6,13 @@ from Crypto.Cipher import PKCS1_OAEP
 from Crypto.Hash import SHA256
 
 
-def generate_rsa_key_pair(key_size=2048):
+def generate_rsa_key_pair(key_size=2048, password="private_key", public_key_file="public_key.pem",
+                          private_key_file="private_key.pem"):
     """
     Funkcja dla generacji kluczy RSA
+    :param private_key_file: file where private key will be stored
+    :param public_key_file: file where public key will be stored
+    :param password: passphrase to encrypt private key
     :param key_size: dlugosc kluczu
     :return: nic nie zwraca, zapisuje kluczy do plikow .pem
     1)Generujemy pierwsze liczby
@@ -49,12 +53,12 @@ def generate_rsa_key_pair(key_size=2048):
     private_key = RSA.construct((n, e, d))
     # szyfrowanie klucza za pomoca 'hasla' - scrypt, pozniej szyfrowanie za pomoca algorymtu - AES128-CBC
     # AES - advanced encryption standards, 128 - dlugosc klucza, CBC - cipher block chaining
-    private_key_pem = private_key.export_key('PEM', passphrase="private_key", pkcs=8, protection="scryptAndAES128-CBC")
+    private_key_pem = private_key.export_key('PEM', passphrase=password, pkcs=8, protection="scryptAndAES128-CBC")
 
-    with open("public_key.pem", "wb") as f:
+    with open(public_key_file, "wb") as f:
         f.write(public_key_pem)
 
-    with open("private_key.pem", "wb") as f:
+    with open(private_key_file, "wb") as f:
         f.write(private_key_pem)
 
 
@@ -97,26 +101,28 @@ def decrypt_message(encrypted_message, private_key):
     return decrypted_message
 
 
-def read_public_key():
+def read_public_key(public_key_file="public_key.pem"):
     """
+    :param public_key_file: plik do odczytu kluczu publicznego
     Funkcja dla odczytania klucza publicznego
     :return: zwraca odczytany klucz publiczny
     """
 
-    with open("public_key.pem", "rb") as f:
+    with open(public_key_file, "rb") as f:
         public_key_pem = f.read()
     public_key = RSA.import_key(public_key_pem)
     return public_key
 
 
-def read_private_key(password=None):
+def read_private_key(password=None, private_key_file="private_key.pem"):
     """
     Funkcja dla odczytania klucza prywatnego
+    :param private_key_file: plik do odczytu kluczu prywatnego
     :param password: haslo dla deszyfrowania klucza prywatnego
     :return: zwraca odczytany klucz prywatny lub None jezeli passphrase sie nie zgadza
     """
 
-    with open("private_key.pem", "rb") as f:
+    with open(private_key_file, "rb") as f:
         private_key_pem = f.read()
     try:
         private_key = RSA.import_key(private_key_pem, passphrase=password)

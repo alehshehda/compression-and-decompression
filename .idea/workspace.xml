@@ -8,14 +8,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="58d67d50-fd60-4e08-9a65-950fb03bd6ef" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compression.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compression.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compressed.txt" beforeDir="false" afterPath="$PROJECT_DIR$/compressed.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compressed_with_RSA.txt" beforeDir="false" afterPath="$PROJECT_DIR$/compressed_with_RSA.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/compression.py" beforeDir="false" afterPath="$PROJECT_DIR$/compression.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/decompression.py" beforeDir="false" afterPath="$PROJECT_DIR$/decompression.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/encryption.py" beforeDir="false" afterPath="$PROJECT_DIR$/encryption.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/menu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/private_key.pem" beforeDir="false" afterPath="$PROJECT_DIR$/private_key.pem" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public_key.pem" beforeDir="false" afterPath="$PROJECT_DIR$/public_key.pem" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,6 +44,11 @@
         </map>
       </branch-storage>
     </excluded-from-favorite>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -72,24 +78,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.compression.executor&quot;: &quot;Run&quot;,
-    &quot;Python.decompression.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.encryption.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;5-add-encryption-to-the-compression-algorithm&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/blinchik/PycharmProjects/compression/to_compress.txt&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;two.files.diff.last.used.file&quot;: &quot;/home/blinchik/PycharmProjects/compression/to_compress.txt&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.compres.executor": "Run",
+    "Python.compression.executor": "Run",
+    "Python.decompression.executor": "Debug",
+    "Python.encryption.executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.menu.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "7-enhance-user-friendly-communications",
+    "last_opened_file_path": "/home/blinchik/PycharmProjects/compression/to_compress.txt",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
+    "two.files.diff.last.used.file": "/home/blinchik/PycharmProjects/compression/to_compress.txt",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="compression" />
@@ -152,6 +161,13 @@
       <workItem from="1714906532789" duration="2208000" />
       <workItem from="1714908757873" duration="14591000" />
       <workItem from="1714927236635" duration="870000" />
+      <workItem from="1714930269894" duration="115000" />
+      <workItem from="1714930403899" duration="1401000" />
+      <workItem from="1714994431192" duration="2888000" />
+      <workItem from="1715022753859" duration="473000" />
+      <workItem from="1715167176614" duration="3556000" />
+      <workItem from="1715186680275" duration="2933000" />
+      <workItem from="1715249150804" duration="18930000" />
     </task>
     <servers />
   </component>
@@ -190,9 +206,11 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/compression$compression.coverage" NAME="compression Coverage Results" MODIFIED="1714846797030" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/compression$menu.coverage" NAME="menu Coverage Results" MODIFIED="1715257927843" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/compression$compression.coverage" NAME="compression Coverage Results" MODIFIED="1715267713570" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/compression$compres.coverage" NAME="compres Coverage Results" MODIFIED="1715267736123" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/compression$decompression.coverage" NAME="decompression Coverage Results" MODIFIED="1714600974698" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/compression$encryption.coverage" NAME="encryption Coverage Results" MODIFIED="1714828729766" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/compression$main.coverage" NAME="main Coverage Results" MODIFIED="1714923338621" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/compression$encryption.coverage" NAME="encryption Coverage Results" MODIFIED="1715257946632" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/compression$main.coverage" NAME="main Coverage Results" MODIFIED="1715269711664" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

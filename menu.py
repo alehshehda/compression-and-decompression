@@ -66,7 +66,29 @@ class FileCompressionDialog(QWidget):
     def on_compress_clicked(self):
         file_path = self.get_file_path("Select file to compress")
         if file_path:
-            self.process_file(file_path, compress, "compression")
+            save_path = self.process_file(file_path, compress, "compression")
+
+            save_path_size = os.path.getsize(save_path)
+            file_path_size = os.path.getsize(file_path)
+            # jezeli kompresja udana
+            if save_path_size < file_path_size:
+                size_of_compressed_data_bytes = file_path_size - save_path_size
+
+                # liczenie danych ile miejsca skopmresowalo sie
+                size_of_compressed_data_mb = size_of_compressed_data_bytes / (1024 * 1024)  # 1 MB = 1024 * 1024 bitow
+                size_of_compressed_data_percentage = ((file_path_size - save_path_size) / file_path_size) * 100
+
+                # wyswietlanie tych danych
+                QMessageBox.information(self, "Success", f"Size of compressed data: {size_of_compressed_data_mb:.2f} MB"
+                                                         f" or {size_of_compressed_data_percentage:.2f}% f"
+                                                         f"rom original size")
+            # jezeli kompresja nieduana:(
+            if save_path_size > file_path_size:
+                reply = QMessageBox.question(self, "Warning", "Compressed file takes more space then original file,"
+                                                              " do you want to save compressed file?",
+                                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                if reply == QMessageBox.No:
+                    os.remove(save_path)
 
     def on_decompress_clicked(self):
         file_path = self.get_file_path("Select file to decompress")
@@ -117,15 +139,15 @@ class FileCompressionDialog(QWidget):
                 if is_decompression:
                     password, ok = QInputDialog.getText(self, "Enter Password", "Enter password to decrypt private key:"
                                                         , QLineEdit.Password)
-                    key = read_private_key(password)
+                    key = read_private_key(password, private_key_file="private_key.pem")
                     if key is None:
                         QMessageBox.critical(self, "Error", "Incorrect password!")
                         return
                 else:
                     key = read_public_key()
                 taken_time = operation(file_path, save_path, key)
-                QMessageBox.information(self, "Success", f"File {operation_name} has been successful!\nTime taken to "
-                                                         f"{operation_name}: {taken_time:.2f} seconds")
+                QMessageBox.information(self, "Success", f"File {operation_name} has been successful!\nTime "
+                                                         f"taken to {operation_name}: {taken_time:.2f} seconds")
             except FileNotFoundError:
                 QMessageBox.critical(self, "Error", "File not found!")
             except PermissionError:
@@ -133,10 +155,27 @@ class FileCompressionDialog(QWidget):
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"{operation_name.capitalize()} failed: {str(e)}")
 
+        if not is_decompression:
+            return save_path
+
     def on_generate_keys_clicked(self):
 
-        try:
-            generate_rsa_key_pair()  # mozna wprowadzic dlugosc klucza
-            QMessageBox.information(self, "Success", "RSA key pair generated successfully!")
-        except Exception as e:
-            QMessageBox.critical(self, "Error", f"Key generation failed: {str(e)}")
+        reply = QMessageBox.question(self, 'Warning', "If you proceed this operation, existing Public and Private Keys "
+                                                      "will be replaced with new ones, messages encrypted with existing"
+                                                      "Public Key will not be possible to decrypt with paired "
+                                                      "Private Key, do you want to proceed?",
+                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            try:
+                password, ok = QInputDialog.getText(self, "Enter Password", "Enter password to encrypt private key:"
+                                                    , QLineEdit.Password)
+                if password is None:
+                    password, ok = QInputDialog.getText(self, "Enter Password", "Password can't be empty:"
+                                                        , QLineEdit.Password)
+                generate_rsa_key_pair(2048, password, public_key_file="public_key.pem",
+                                      private_key_file="private_key.pem")
+                QMessageBox.information(self, "Success", "RSA key pair generated successfully!")
+            except Exception as e:
+                QMessageBox.critical(self, "Error", f"Key generation failed: {str(e)}")
+        else:
+            QMessageBox.information(self, "Information", "Old keys have been kept")
